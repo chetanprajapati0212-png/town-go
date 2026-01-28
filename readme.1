@@ -1,0 +1,94 @@
+# Town Go
+
+**What this is:** Real-time public transport tracker for small towns & villages in India with SMS notifications and mobile-first design.
+
+**How to run (docker):** `docker-compose up --build` then `make seed` to populate demo data.
+
+## Quick Start
+
+### With Docker (Recommended)
+```bash
+# Clone and navigate to repo
+git clone <repo-url> town_go
+cd town_go
+
+# Start services
+docker-compose up --build
+
+# In another terminal, seed the database
+make seed
+
+# Visit http://localhost:5000
+```
+
+### Local Development
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Set environment variables
+cp .env.example .env
+# Edit .env with your settings
+
+# Initialize database
+python backend/db_create.py
+python backend/db_seed.py
+
+# Run the app
+python run.py
+```
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_URL` | `mysql+pymysql://root:password@localhost/towngo` | Database connection string |
+| `SECRET_KEY` | `dev-secret-key` | JWT signing key |
+| `JWT_EXP_DAYS` | `7` | JWT token expiry in days |
+| `AVG_SPEED_KMPH` | `25` | Average vehicle speed for ETA calculation |
+| `MYSQL_ROOT_PASSWORD` | `password` | MySQL root password (Docker only) |
+
+## API Testing Examples
+
+### Register User
+```bash
+curl -X POST http://localhost:5000/api/register_user \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "phone": "9876543210", "password": "mypass"}'
+```
+
+### Login
+```bash
+curl -X POST http://localhost:5000/api/login_user \
+  -H "Content-Type: application/json" \
+  -d '{"phone": "9999999999", "password": "testpass"}'
+```
+
+### List Vehicles
+```bash
+curl http://localhost:5000/api/list_vehicles
+```
+
+### Get ETA
+```bash
+curl http://localhost:5000/api/get_eta/1/Main%20Market
+```
+
+## Commands
+
+- `make build` - Build Docker image
+- `make up` - Start services
+- `make seed` - Seed database with demo data
+- `make test` - Run tests
+
+## Documentation
+
+- [API Specification](docs/api_spec.md)
+- [Development Guide](docs/README.md)
+
+## Tech Stack
+
+- **Backend:** Flask, SQLAlchemy, MySQL, JWT
+- **Frontend:** Vanilla JS, Leaflet maps, responsive HTML/CSS
+- **DevOps:** Docker, Docker Compose, GitHub Actions
+- **Testing:** pytest
